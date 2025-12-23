@@ -114,6 +114,7 @@ export const Login: React.FC = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 className="px-4 py-3 w-full rounded-xl bg-white/20 text-slate-600 placeholder-gray-400 border border-white/30 focus:ring-2 focus:ring-blue-400 pr-12 transition-all duration-300 hover:scale-105"
                 placeholder="Password"
+                autoComplete={isSignUp ? "new-password" : "current-password"}
               />
               <button
                 type="button"
