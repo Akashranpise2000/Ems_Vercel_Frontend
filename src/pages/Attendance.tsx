@@ -1,5 +1,6 @@
 import React, { useEffect, useState, CSSProperties } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { API_ENDPOINTS, getAuthHeaders } from '../lib/api';
 
 interface AttendanceRecord {
   _id: string;
@@ -27,8 +28,6 @@ export const Attendance: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
 
-  const API_BASE_URL = 'http://localhost:5001/api';
-
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
@@ -40,17 +39,9 @@ export const Attendance: React.FC = () => {
     }
   }, [user]);
 
-  const getAuthHeaders = () => {
-    const token = localStorage.getItem('authToken');
-    return {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    };
-  };
-
   const loadAttendanceRecords = async (): Promise<void> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/attendance`, {
+      const response = await fetch(API_ENDPOINTS.ATTENDANCE.BASE, {
         headers: getAuthHeaders()
       });
 
@@ -89,7 +80,7 @@ export const Attendance: React.FC = () => {
 
     setClockingIn(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/attendance/clock-in`, {
+      const response = await fetch(API_ENDPOINTS.ATTENDANCE.CLOCK_IN, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify({ location: 'Office' }) // You can get location from geolocation if needed
@@ -118,7 +109,7 @@ export const Attendance: React.FC = () => {
 
     setClockingOut(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/attendance/clock-out`, {
+      const response = await fetch(API_ENDPOINTS.ATTENDANCE.CLOCK_OUT, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify({ notes: '' })
